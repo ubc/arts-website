@@ -35,11 +35,20 @@ Class UBC_Arts_Theme_Options {
         
         add_filter( 'ubc_collab_default_theme_options', array(__CLASS__, 'default_values'), 10,1 );
         add_filter( 'ubc_collab_theme_options_validate', array(__CLASS__, 'validate'), 10, 2 );
+      	
       
         //arts specifics:
-        remove_action(self::$prefix.'_header', array( 'UBC_Collab_Navigation','header_menu'), 12 );
+        // this needs to happen way later
+        // remove_action(self::$prefix.'_header', array( 'UBC_Collab_Navigation','header_menu'), 12 );
+        // try something like this instead
+        add_action('after_setup_theme', array(__CLASS__, 'remove_navigation',10 );
         //add_action( self::$prefix.'_header', array(__CLASS__, 'arts_header_menu'), 12 );
         
+    }
+    
+    function remove_navigation(){
+    	remove_action(self::$prefix.'_header', array( 'UBC_Collab_Navigation','header_menu'), 12 );
+    	
     }
     
     /*

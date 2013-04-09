@@ -13,6 +13,8 @@
 Class UBC_Arts_Theme_Options {
 
     static $prefix;
+    static $faculty_main_homepage;
+    static $add_script;
 
     /**
      * init function.
@@ -24,11 +26,14 @@ Class UBC_Arts_Theme_Options {
 
         self::$prefix = 'wp-hybrid-clf'; // function hybrid_get_prefix() is not available within the plugin
         
+        self::$faculty_main_homepage = 'http://www.arts.ubc.ca';
         // include Arts specific css file
         wp_register_style('arts-theme-option-style', plugins_url('arts-website') . '/css/style.css');
         // include Arts specific javascript file
         wp_register_script('arts-theme-option-script', plugins_url('arts-website') . '/js/script.js');
-
+        add_action( 'init', array(__CLASS__, 'register_scripts' ) );
+        add_action( 'wp_footer', array(__CLASS__, 'print_script' ) );
+        
         add_action('ubc_collab_theme_options_ui', array(__CLASS__, 'arts_ui'));
         
         add_action( 'admin_init',array(__CLASS__, 'admin' ) );
@@ -36,21 +41,45 @@ Class UBC_Arts_Theme_Options {
         add_filter( 'ubc_collab_default_theme_options', array(__CLASS__, 'default_values'), 10,1 );
         add_filter( 'ubc_collab_theme_options_validate', array(__CLASS__, 'validate'), 10, 2 );
       	
-      
-        //arts specifics:
-        // this needs to happen way later
-        // remove_action(self::$prefix.'_header', array( 'UBC_Collab_Navigation','header_menu'), 12 );
-        // try something like this instead
-        add_action('after_setup_theme', array(__CLASS__, 'remove_navigation',10 );
-        //add_action( self::$prefix.'_header', array(__CLASS__, 'arts_header_menu'), 12 );
+        add_action( 'wp_head', array( __CLASS__,'wp_head' ) );
+        
+        /************ Arts specifics *************/      
+        //Add Arts Logo
+        add_filter('wp_nav_menu_items', array(__CLASS__,'add_arts_logo_to_menu'), 10, 2);
+        //Add Apply Now button to Menu if selected
+        add_filter('wp_nav_menu_items', array(__CLASS__,'add_apply_now_to_menu'), 10, 2);
         
     }
     
-    function remove_navigation(){
-    	remove_action(self::$prefix.'_header', array( 'UBC_Collab_Navigation','header_menu'), 12 );
-    	
-    }
-    
+    /**
+     * register_scripts function.
+     * 
+     * @access public
+     * @return void
+     */
+    function register_scripts() {
+    	self::$add_script = true;
+		// register the spotlight functions
+        if( !is_admin() ):
+        	wp_register_script( 'ubc-collab-arts', plugins_url('arts-website').'/js/arts-website.js', array( 'jquery' ), '0.1', true );
+        	wp_enqueue_style('ubc-collab-arts', plugins_url('arts-website').'/css/arts-website.css');
+        endif;
+	
+	}   
+	/**
+	 * print_script function.
+	 * 
+	 * @access public
+	 * @static
+	 * @return void
+	 */
+	static function print_script() {
+		if ( ! self::$add_script )
+			return;
+                
+		wp_print_scripts( 'ubc-collab-arts' );
+	}    
+        
     /*
      * This function includes the css and js for this specifc admin option
      *
@@ -210,26 +239,11 @@ Class UBC_Arts_Theme_Options {
     UBC_Arts_Theme_Options::arts_defaults();
     }    
     
+    //REVIEW THIS
     function arts_defaults(){
         UBC_Collab_Theme_Options::update('clf-unit-colour', '#6D6E70');
-        //wp_nav_menu( array( 'before' => '111111' ) );
     }
     
-    
-    function arts_header_menu(){
-		?>
-		<!-- UBC Unit Navigation -->
-        <div id="ubc7-unit-menu" class="navbar expand" role="navigation">
-            <div class="navbar-inner expand">
-                <div class="container"><a href="#"><img src="http://anth.sites.olt.ubc.ca/files/2013/02/ArtsSquare1.jpg"/></a>
-                 <?php wp_nav_menu( array('theme_location' => 'primary', 'walker' => new Bootstrap_Walker_Nav_Menu(), 'container_class' => 'nav-collapse collapse', 'container_id'=> 'ubc7-unit-navigation' , 'fallback_cb' => array(__CLASS__, 'pages_nav'), 'menu_class' => 'nav') ); ?>
-                    
-                </div>
-            </div><!-- /navbar-inner -->
-        </div><!-- /navbar -->
-        <!-- End of UBC Unit Navigation -->
-		<?php        
-    }
     /*********** 
      * Default Options
      * 
@@ -319,6 +333,59 @@ Class UBC_Arts_Theme_Options {
 	    );
 	   return $reverse_colour;
 	}
+        
+    /**
+     * add_arts_logo_to_menu
+     * Adds the Arts logo to primary menu
+     * @access public
+     * @return menu items
+     */         
+      function add_arts_logo_to_menu ( $items, $args ) {
+            if ($args->theme_location == 'primary') {
+                $items = '<a id="artslogo" href="'.self::$faculty_main_homepage.'" title="Arts" target="_blank">&nbsp;</a>'.$items;
+            }
+            return $items;
+       }
+        
+      /**
+     * add_apply_now_to_menu
+     * Adds the optional Apply Now button to the  primary menu
+     * @access public
+     * @return menu items
+     */         
+        function add_apply_now_to_menu( $items, $args ){
+            if ($args->theme_location == 'primary') {
+                if(UBC_Collab_Theme_Options::get('arts-enable-apply-now')){
+                    $items .= '<a id="applybtn" href="'.UBC_Collab_Theme_Options::get('arts-apply-now-url').'" title="Apply Now">'.UBC_Collab_Theme_Options::get('arts-apply-now-text').'</a>';
+                }
+            }
+            return $items;
+        }
+        
+       /**
+     * wp_head
+     * Appends some of the dynamic css and js to the wordpress header
+     * @access public
+     * @return void
+     */        
+        function wp_head(){ ?>
+        <style type="text/css" media="screen">
+            a#artslogo{ 
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour')?>;
+            } 
+            a#artslogo{
+                background-image:url(<?php echo (UBC_Collab_Theme_Options::get('arts-d-colour')=='w'? 'http://project.arts.ubc.ca/webproject/images/ArtsLogoTrans.png' : 'http://project.arts.ubc.ca/webproject/images/ArtsLogoTrans-black.png')?>);
+            }
+            a#applybtn:hover {
+                background-color: <?php echo UBC_Collab_Theme_Options::get('arts-c-colour');?>;
+            }
+            a#applybtn {
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour');?>;
+            }
+        </style>
+        
+        <?php
+        }
 
 }
 

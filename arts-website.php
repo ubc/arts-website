@@ -31,7 +31,7 @@ Class UBC_Arts_Theme_Options {
         wp_register_style('arts-theme-option-style', plugins_url('arts-website') . '/css/style.css');
         // include Arts specific javascript file
         wp_register_script('arts-theme-option-script', plugins_url('arts-website') . '/js/script.js');
-        add_action( 'init', array(__CLASS__, 'register_scripts' ) );
+        add_action( 'init', array(__CLASS__, 'register_scripts' ), 12 );
         add_action( 'wp_footer', array(__CLASS__, 'print_script' ) );
         
         add_action('ubc_collab_theme_options_ui', array(__CLASS__, 'arts_ui'));
@@ -42,13 +42,19 @@ Class UBC_Arts_Theme_Options {
         add_filter( 'ubc_collab_theme_options_validate', array(__CLASS__, 'validate'), 10, 2 );
       	
         add_action( 'wp_head', array( __CLASS__,'wp_head' ) );
+        add_action( 'wp_footer', array( __CLASS__,'wp_footer' ) );
         
         /************ Arts specifics *************/      
         //Add Arts Logo
         add_filter('wp_nav_menu_items', array(__CLASS__,'add_arts_logo_to_menu'), 10, 2);
         //Add Apply Now button to Menu if selected
         add_filter('wp_nav_menu_items', array(__CLASS__,'add_apply_now_to_menu'), 10, 2);
-        
+        //Add Arts frontpage layout
+        add_action( 'init', array(__CLASS__, 'arts_frontpage_layout' ) );
+        //remove slider margin
+        add_action( 'init', array(__CLASS__, 'remove_slider_margin'));
+        //Select Transparent Slider
+        add_action( 'init', array(__CLASS__, 'select_transparent_slider'));
     }
     
     /**
@@ -232,6 +238,11 @@ Class UBC_Arts_Theme_Options {
                 <ol>
                     <li>Unit/Website Bar Background Colour: #6D6E70</li>
                     <li>Add Arts logo in the menu</li>
+                    <li>Add Apply Now button in the menu, if selected</li>
+                    <li>Load Arts frontpage layout. (place the file layout-option5.php in the frontpage folder)</li>
+                    <li>Remove Slider Margin</li>
+                    <li>Select Transparent Slider</li>
+                    <li>Attach Why-Unit under slider, if selected (using jQuery for now. It will need to be added as a slider on Collab)</li>
                 </ol>
             </div>
         
@@ -362,6 +373,52 @@ Class UBC_Arts_Theme_Options {
             return $items;
         }
         
+        function arts_frontpage_layout(){
+            UBC_Collab_Theme_Options::update('frontpage-layout', 'layout-option5');
+            // apply the right width divs to the columns
+            //remove_filter( 'ubc_collab_sidebar_class', array(__CLASS__, 'add_sidebar_class' ), 10, 2 );
+            remove_filter('ubc_collab_sidebar_class', $sidebar_class,  'frontpage');
+	    add_filter( 'ubc_collab_sidebar_class', array(__CLASS__, 'add_sidebar_class' ), 10, 2 );
+        }
+
+	/**
+	 * add_sidebar_class function.
+	 * 
+	 * @access public
+	 * @param mixed $classes
+	 * @return void
+	 */
+	function add_sidebar_class( $classes, $id  ) {
+            if ( is_active_sidebar( 'frontpage' ) && is_front_page()){
+		if (in_array($id, array("utility-before-content", "utility-after-content", "utility-after-singular") ) )
+			return $classes;
+		else
+                        //if content is span6
+			return $classes." span6";
+            }
+	}    
+        
+        function remove_slider_margin(){
+            UBC_Collab_Theme_Options::update('slider-remove-margin', 1);
+        }
+        
+        function select_transparent_slider(){
+            UBC_Collab_Theme_Options::update('slider-remove-margin', 1);
+        }
+//        function arts_frontpage_layout(){
+//            if ( $overridden_template = locate_template( 'layout-option-art1.php' ) ) {
+//             // locate_template() returns path to file
+//             // if either the child theme or the parent theme have overridden the template
+//             load_template( $overridden_template );
+//             //die();
+//           } else {
+//             // If neither the child nor parent theme have overridden the template,
+//             // we load the template from the 'frontpage' sub-directory of the directory this file is in
+//             load_template( plugins_url('arts-website') . '/frontpage/layout-option-art1.php' );
+//             //die();
+//           }           
+//        }
+        
        /**
      * wp_head
      * Appends some of the dynamic css and js to the wordpress header
@@ -382,11 +439,42 @@ Class UBC_Arts_Theme_Options {
             a#applybtn {
                 background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour');?>;
             }
+            body.home .nav-tabs > li > a{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour');?>;}
+            body.home .nav-tabs > .active > a, .nav-tabs > .active > a:hover{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-b-colour');?>;border:none;}
+            body.home .nav-tabs > li > a:hover{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-b-colour');?>;}
+            .transparent .carousel-caption{
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour');?>;
+                border:2px solid <?php echo UBC_Collab_Theme_Options::get('arts-b-colour');?>;
+            }
+            @media(max-width:980px){
+                a#artslogo{
+                    background-image:url(<?php echo (UBC_Collab_Theme_Options::get('arts-d-colour')=='w'? 'http://project.arts.ubc.ca/webproject/images/FOA_FullLogo.png' : 'http://project.arts.ubc.ca/webproject/images/FOA_FullLogo-black.png')?>);
+                }
+            }
         </style>
-        
-        <?php
-        }
-
+    <?php
+    } 
+    
+    function wp_footer(){
+         if( is_front_page() && UBC_Collab_Theme_Options::get('arts-enable-why-unit')):
+            ?>
+            <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    $('div.flexslider').append('<div id="shadow"></div>');
+                    $('div.flexslider').append('<a id="why-unit" href="<?php echo UBC_Collab_Theme_Options::get('arts-why-unit-url');?>" title="<?php echo UBC_Collab_Theme_Options::get('arts-why-unit-text');?>"><span><?php echo UBC_Collab_Theme_Options::get('arts-why-unit-text');?></span></a>');
+                    
+                 });
+                 jQuery(document).ready(function($) {
+                    $( "div.when" ).each(function( index ) {
+                       var datestr = $(this).html();
+                       datestr = datestr.substr(0,datestr.indexOf(':')-2).trim(); //rid of second date and time
+                       if (datestr) $(this).html(datestr);
+                     });
+                     $('div.section-widget-tabbed').css('display','block'); //handles screen lag
+                 });
+            </script>
+        <?php endif;        
+    }
 }
 
 UBC_Arts_Theme_Options::init();

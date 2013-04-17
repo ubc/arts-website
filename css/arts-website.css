@@ -75,8 +75,8 @@ a#applybtn:hover {
 	margin-top: 25px;
 }
 
-#shadow{position:absolute;height:45px;margin-left:20px;margin-top:40px;width:380px;padding:15px 0 10px;background:url("http://project.arts.ubc.ca/webproject/images/HomepageBoxShadow.jpg") no-repeat scroll 0 0 transparent;}
-#why-unit{position:absolute;width:50%;height:45px;margin-top:-11px;margin-left:50%;padding:15px 0 10px;background:url("http://anth.sites.olt.ubc.ca/files/2013/02/WhyAnthButton1.png");}
+#shadow{position:absolute;height:45px;margin-left:20px;margin-top:40px;width:380px;padding:15px 0 10px;background:url("../img/HomepageBoxShadow.jpg") no-repeat scroll 0 0 transparent;}
+#why-unit{position:absolute;width:50%;height:45px;margin-top:-11px;margin-left:50%;padding:15px 0 10px;background:url("../img/WhyAnthButton1.png");}
 #why-unit span{color:white;text-align:center;display:inline-block;margin-left:25%}
 div.why{clear:both;margin-bottom:20px;}
 
@@ -92,8 +92,8 @@ div.why h4{font-size:24px;margin-bottom:0px;}
 }
 @media(max-width:980px){
     #applybtn{float:none;} 
-    #artslogo{background-image:url("http://project.arts.ubc.ca/webproject/images/FOA_FullLogo.png");background-position:18px 50%}
-    #artslogo:hover{background:url("http://project.arts.ubc.ca/webproject/images/FOA_FullLogo.png") 18px 50% #543090 no-repeat;}
+    #artslogo{background-image:url("../img/FOA_FullLogo.png");background-position:18px 50%}
+    #artslogo:hover{background:url("../img/FOA_FullLogo.png") 18px 50% #543090 no-repeat;}
     #artslogo{width:100%;float:none;}
 }
 @media(max-width:861px){

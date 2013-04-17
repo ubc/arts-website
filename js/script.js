@@ -76,7 +76,7 @@ jQuery(document).ready(function() {
         jQuery(".arts-apply-inputs").hide();
     }
     jQuery('#ubc-collab-theme-options-arts-enable-why-unit').change( function(){
-		console.log('checked');
+		
 		if( jQuery(this).prop("checked") ){
 			jQuery(".arts-why-inputs").slideDown();
 		} else {

@@ -6,19 +6,19 @@
 
 jQuery(document).ready(function() {
     
-    jQuery("#arts-a-colour").wpColorPicker({
+    jQuery("#arts-main-colour").wpColorPicker({
         palettes: ['#5F62A9', '#98D5CA', '#D6DF30', '#FFDD00', '#E11553', '#EE523C']
     });
         
-    jQuery("#arts-b-colour").wpColorPicker({
+    jQuery("#arts-gradient-colour").wpColorPicker({
         palettes: ['#5F62A9', '#98D5CA', '#D6DF30', '#FFDD00', '#E11553', '#EE523C']
     });
     
-    jQuery("#arts-c-colour").wpColorPicker({
+    jQuery("#arts-hover-colour").wpColorPicker({
         palettes: ['#5F62A9', '#98D5CA', '#D6DF30', '#FFDD00', '#E11553', '#EE523C']
     });   
     
-    jQuery('#arts-b-colour').after('<a id="lighter-colour" href="#">20% lighter than (A)</a>');
+    jQuery('#arts-gradient-colour').after('<a id="lighter-colour" href="#">20% lighter than (A)</a>');
     
     function hexToRgb(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -30,13 +30,13 @@ jQuery(document).ready(function() {
     }
 
     jQuery('#lighter-colour').click(function(){
-            var a = jQuery('#arts-a-colour').val();
+            var a = jQuery('#arts-main-colour').val();
             
             var r = hexToRgb(a).r;
             var g = hexToRgb(a).g;
             var b = hexToRgb(a).b;
             
-            jQuery('#arts-b-colour').wpColorPicker( 'color', Lighthen(r, g, b));
+            jQuery('#arts-gradient-colour').wpColorPicker( 'color', Lighthen(r, g, b));
         });
         
     function Lighthen(red, green, blue){

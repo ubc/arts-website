@@ -160,20 +160,20 @@ Class UBC_Arts_Theme_Options {
     
 		<div class="explanation"><a href="#" class="explanation-help">Info</a>
 			
-			<div> TODO: some explanation...</div>
+			<div> These colours are specific to each unit and represent the colour of Arts logo, and pieces of the items throughout the site.</div>
 		</div>
 		<div id="arts-unit-colour-box">
 			<label><b>Unit/Website Main Colour:</b></label>
-			<div class="arts-colour-item"><span>(A) Main colour: </span><?php  UBC_Collab_Theme_Options::text( 'arts-a-colour' ); ?></div><br/>
-                        <div class="arts-colour-item"><span>(B) Gradient colour: </span><?php  UBC_Collab_Theme_Options::text( 'arts-b-colour' ); ?></div><br/>
-                        <div class="arts-colour-item"><span>(C) Hover colour: </span><?php  UBC_Collab_Theme_Options::text( 'arts-c-colour' ); ?></div><br/>
+			<div class="arts-colour-item"><span>(A) Main colour: </span><?php  UBC_Collab_Theme_Options::text( 'arts-main-colour' ); ?></div><br/>
+                        <div class="arts-colour-item"><span>(B) Gradient colour: </span><?php  UBC_Collab_Theme_Options::text( 'arts-gradient-colour' ); ?></div><br/>
+                        <div class="arts-colour-item"><span>(C) Hover colour: </span><?php  UBC_Collab_Theme_Options::text( 'arts-hover-colour' ); ?></div><br/>
                         <div class="arts-colour-item"><span>(D) Reverse colour: </span></div>
                         <ul>                        
                         <?php	
                             foreach ( UBC_Arts_Theme_Options::arts_reverse_colour() as $option ) {
                                 ?>
                                 <li class="layout">
-                                <?php UBC_Collab_Theme_Options::radio( 'arts-d-colour', $option['value'], $option['label']); ?>
+                                <?php UBC_Collab_Theme_Options::radio( 'arts-reverse-colour', $option['value'], $option['label']); ?>
                                 </li>
                       <?php } ?>
                         </ul>
@@ -189,7 +189,7 @@ Class UBC_Arts_Theme_Options {
     function arts_why_unit_options(){ ?>
             <div class="explanation"><a href="#" class="explanation-help">Info</a>
 
-                    <div> TODO: some explanation...</div>
+                    <div> By enabling this option, a "why unit" bar will be attached to the slider that links to the specified page.</div>
             </div>
             <div id="arts-why-unit-box">
                 <label><b>Why Unit/Website Options:</b></label>
@@ -210,7 +210,7 @@ Class UBC_Arts_Theme_Options {
     function arts_apply_now_options(){ ?>
             <div class="explanation"><a href="#" class="explanation-help">Info</a>
 
-                    <div> TODO: some explanation...</div>
+                    <div> An optional button to be appended to the main navigation menu that will link to the specified application page</div>
             </div>
             <div id="arts-apply-now-box">
                 <label><b>Apply Now Options:</b></label>
@@ -231,7 +231,7 @@ Class UBC_Arts_Theme_Options {
     function arts_hardcoded_options(){ ?>
             <div class="explanation"><a href="#" class="explanation-help">Info</a>
 
-                    <div> TODO: some explanation...</div>
+                    <div> The following are the description of hardcoded items in the Arts sites.</div>
             </div>
             <div id="arts-hardcoded-box">
                 <label><b>The following options are hardcoded:</b></label>
@@ -239,7 +239,7 @@ Class UBC_Arts_Theme_Options {
                     <li>Unit/Website Bar Background Colour: #6D6E70</li>
                     <li>Add Arts logo in the menu</li>
                     <li>Add Apply Now button in the menu, if selected</li>
-                    <li>Load Arts frontpage layout. (place the file layout-option5.php in the frontpage folder)</li>
+                    <li>Load Arts frontpage layout.</li>
                     <li>Remove Slider Margin</li>
                     <li>Select Transparent Slider</li>
                     <li>Attach Why-Unit under slider, if selected (using jQuery for now. It will need to be added as a slider on Collab)</li>
@@ -269,10 +269,10 @@ Class UBC_Arts_Theme_Options {
             }
 
             $defaults = array(
-                'arts-a-colour'		=> '#5E869F',
-                'arts-b-colour'		=> '#71a1bf',
-                'arts-c-colour'		=> '#002145',
-                'arts-d-colour'		=> 'w',
+                'arts-main-colour'		=> '#5E869F',
+                'arts-gradient-colour'		=> '#71a1bf',
+                'arts-hover-colour'		=> '#002145',
+                'arts-reverse-colour'		=> 'white',
                 'arts-enable-why-unit'  => true,
                 'arts-why-unit-text'    => 'Why Unit/Department?',
                 'arts-why-unit-url'     => '#',
@@ -303,13 +303,13 @@ Class UBC_Arts_Theme_Options {
 		
 
 	    // Validate Unit Colour Options A, B, and C
-            $starter['arts-a-colour'] = UBC_Collab_Theme_Options::validate_text($input['arts-a-colour'], $starter['arts-a-colour'] );
-            $starter['arts-b-colour'] = UBC_Collab_Theme_Options::validate_text($input['arts-b-colour'], $starter['arts-b-colour'] );
-            $starter['arts-c-colour'] = UBC_Collab_Theme_Options::validate_text($input['arts-c-colour'], $starter['arts-c-colour'] );
+            $starter['arts-main-colour'] = UBC_Collab_Theme_Options::validate_text($input['arts-main-colour'], $starter['arts-main-colour'] );
+            $starter['arts-gradient-colour'] = UBC_Collab_Theme_Options::validate_text($input['arts-gradient-colour'], $starter['arts-gradient-colour'] );
+            $starter['arts-hover-colour'] = UBC_Collab_Theme_Options::validate_text($input['arts-hover-colour'], $starter['arts-hover-colour'] );
             
             // Validate Unit Colour Options D
-            if ( isset( $input['arts-d-colour'] ) && array_key_exists( $input['arts-d-colour'], UBC_Arts_Theme_Options::arts_reverse_colour() ) ) {
-	        $starter['arts-d-colour'] = $input['arts-d-colour'];
+            if ( isset( $input['arts-reverse-colour'] ) && array_key_exists( $input['arts-reverse-colour'], UBC_Arts_Theme_Options::arts_reverse_colour() ) ) {
+	        $starter['arts-reverse-colour'] = $input['arts-reverse-colour'];
 	    }
             
             //Validate Why-unit options
@@ -333,12 +333,12 @@ Class UBC_Arts_Theme_Options {
 	 */
 	function arts_reverse_colour() {
 		$reverse_colour = array(
-	        'w' => array(
-	            'value' => 'w',
+	        'white' => array(
+	            'value' => 'white',
 	            'label' => __( 'White', 'arts-clf' )
 	        ),
-	        'b' => array(
-	            'value' => 'b',
+	        'black' => array(
+	            'value' => 'black',
 	            'label' => __( 'Black', 'arts-clf' )
 	        )
 	    );
@@ -428,27 +428,27 @@ Class UBC_Arts_Theme_Options {
         function wp_head(){ ?>
         <style type="text/css" media="screen">
             a#artslogo{ 
-                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour')?>;
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour')?>;
             } 
             a#artslogo{
-                background-image:url(<?php echo (UBC_Collab_Theme_Options::get('arts-d-colour')=='w'? 'http://project.arts.ubc.ca/webproject/images/ArtsLogoTrans.png' : 'http://project.arts.ubc.ca/webproject/images/ArtsLogoTrans-black.png')?>);
+                background-image:url(<?php echo plugins_url('arts-website').(UBC_Collab_Theme_Options::get('arts-reverse-colour')=='white'? '/img/ArtsLogoTrans.png' : '/img/ArtsLogoTrans-black.png')?>);
             }
             a#applybtn:hover {
-                background-color: <?php echo UBC_Collab_Theme_Options::get('arts-c-colour');?>;
+                background-color: <?php echo UBC_Collab_Theme_Options::get('arts-hover-colour');?>;
             }
             a#applybtn {
-                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour');?>;
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?>;
             }
-            body.home .nav-tabs > li > a{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour');?>;}
-            body.home .nav-tabs > .active > a, .nav-tabs > .active > a:hover{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-b-colour');?>;border:none;}
-            body.home .nav-tabs > li > a:hover{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-b-colour');?>;}
+            body.home .nav-tabs > li > a{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?>;}
+            body.home .nav-tabs > .active > a, .nav-tabs > .active > a:hover{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;border:none;}
+            body.home .nav-tabs > li > a:hover{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;}
             .transparent .carousel-caption{
-                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-a-colour');?>;
-                border:2px solid <?php echo UBC_Collab_Theme_Options::get('arts-b-colour');?>;
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?>;
+                border:2px solid <?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;
             }
             @media(max-width:980px){
                 a#artslogo{
-                    background-image:url(<?php echo (UBC_Collab_Theme_Options::get('arts-d-colour')=='w'? 'http://project.arts.ubc.ca/webproject/images/FOA_FullLogo.png' : 'http://project.arts.ubc.ca/webproject/images/FOA_FullLogo-black.png')?>);
+                    background-image:url(<?php echo plugins_url('arts-website').(UBC_Collab_Theme_Options::get('arts-reverse-colour')=='white'? '/img/FOA_FullLogo.png' : '/img/FOA_FullLogo-black.png')?>);
                 }
             }
         </style>

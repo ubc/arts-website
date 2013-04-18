@@ -403,7 +403,7 @@ Class UBC_Arts_Theme_Options {
         }
         
         function select_transparent_slider(){
-            UBC_Collab_Theme_Options::update('slider-remove-margin', 1);
+            UBC_Collab_Theme_Options::update('slider-option', 'transparent');
         }
 //        function arts_frontpage_layout(){
 //            if ( $overridden_template = locate_template( 'layout-option-art1.php' ) ) {

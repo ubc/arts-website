@@ -23,10 +23,15 @@ Class UBC_Arts_Theme_Options {
      * @return void
      */
     function init() {
-
+		
         self::$prefix = 'wp-hybrid-clf'; // function hybrid_get_prefix() is not available within the plugin
         
         self::$faculty_main_homepage = 'http://www.arts.ubc.ca';
+        
+        $theme = wp_get_theme();
+       	
+        if( "UBC Collab" != $theme->name )
+        	return true;
         // include Arts specific css file
         wp_register_style('arts-theme-option-style', plugins_url('arts-website') . '/css/style.css');
         // include Arts specific javascript file
@@ -398,13 +403,13 @@ Class UBC_Arts_Theme_Options {
             }
 	}    
         
-        function remove_slider_margin(){
-            UBC_Collab_Theme_Options::update('slider-remove-margin', 1);
-        }
-        
-        function select_transparent_slider(){
-            UBC_Collab_Theme_Options::update('slider-option', 'transparent');
-        }
+    function remove_slider_margin(){
+        UBC_Collab_Theme_Options::update('slider-remove-margin', 1);
+    }
+    
+    function select_transparent_slider(){
+        UBC_Collab_Theme_Options::update('slider-option', 'transparent');
+    }
 //        function arts_frontpage_layout(){
 //            if ( $overridden_template = locate_template( 'layout-option-art1.php' ) ) {
 //             // locate_template() returns path to file
@@ -477,7 +482,7 @@ Class UBC_Arts_Theme_Options {
     }
 }
 
-if( class_exists('UBC_Collab_Theme_Options') )
+
 UBC_Arts_Theme_Options::init();
 
 //var_dump( get_option( 'ubc-collab-theme-options' ));

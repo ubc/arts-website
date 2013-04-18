@@ -477,6 +477,7 @@ Class UBC_Arts_Theme_Options {
     }
 }
 
+if( class_exists('UBC_Collab_Theme_Options') )
 UBC_Arts_Theme_Options::init();
 
 //var_dump( get_option( 'ubc-collab-theme-options' ));

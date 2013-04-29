@@ -427,17 +427,36 @@ Class UBC_Arts_Theme_Options {
      */        
         function wp_head(){ ?>
         <style type="text/css" media="screen">
-            a#artslogo{ 
+            .gradient-color{
+                color: <?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour')?>;
+            }
+            .main-color {
+                color: <?php echo UBC_Collab_Theme_Options::get('arts-main-colour')?>;
+            }
+            .hover-color{
+                color: <?php echo UBC_Collab_Theme_Options::get('arts-hover-colour')?>;
+            }
+            a#artslogo, .main-bg, #qlinks a, #primary-secondary{
                 background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour')?>;
-            } 
+            }
+            .gradient-bg, #primary-secondary{
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour')?>;
+            }
+            a{
+                color: <?php echo UBC_Collab_Theme_Options::get('arts-main-colour')?>;
+                text-decoration:none;
+            }
+            a:hover{
+                color:<?php echo UBC_Collab_Theme_Options::get('arts-hover-colour')?>;
+            }
             a#artslogo{
                 background-image:url(<?php echo plugins_url('arts-website').(UBC_Collab_Theme_Options::get('arts-reverse-colour')=='white'? '/img/ArtsLogoTrans.png' : '/img/ArtsLogoTrans-black.png')?>);
             }
-            a#applybtn:hover {
+            a#applybtn:hover, .hover-bg, #qlinks li a:hover {
                 background-color: <?php echo UBC_Collab_Theme_Options::get('arts-hover-colour');?>;
             }
             a#applybtn {
-                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?>;
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?> ;
             }
             body.home .nav-tabs > li > a{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?>;}
             body.home .nav-tabs > .active > a, .nav-tabs > .active > a:hover{background-color:<?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;border:none;}

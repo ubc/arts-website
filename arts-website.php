@@ -444,7 +444,7 @@ Class UBC_Arts_Theme_Options {
             a#artslogo, .main-bg, #qlinks a, #primary-secondary{
                 background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour')?>;
             }
-            .gradient-bg, #primary-secondary{
+            .gradient-bg{
                 background-color:<?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour')?>;
             }
             a{
@@ -470,6 +470,27 @@ Class UBC_Arts_Theme_Options {
                 background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?>;
                 border:2px solid <?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;
             }
+            /*sidenav*/
+            /*color*/
+            .sidenav .accordion-inner a ,.sidenav.accordion{
+                border-bottom: 1px solid <?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;
+            }
+            div.sidenav a.opened{
+                background:none <?php echo UBC_Collab_Theme_Options::get('arts-hover-colour');?>;
+            }
+            .sidenav div.single a, .supages-navi-level-0 a, .accordion-inner{
+                border-top:1px solid <?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;
+            }
+            .sidenav .accordion-inner{
+                background-color: <?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?>;
+            }
+            div.sidenav div.single, div.accordion-group{
+                background-color:<?php echo UBC_Collab_Theme_Options::get('arts-main-colour');?>;
+            }
+            .accordion-heading .accordion-toggle {
+                border-left: 1px solid <?php echo UBC_Collab_Theme_Options::get('arts-gradient-colour');?> !important;
+            }
+            /*end sidenav*/
             @media(max-width:980px){
                 a#artslogo{
                     background-image:url(<?php echo plugins_url('arts-website').(UBC_Collab_Theme_Options::get('arts-reverse-colour')=='white'? '/img/FOA_FullLogo.png' : '/img/FOA_FullLogo-black.png')?>);
